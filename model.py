@@ -55,3 +55,4 @@ class RNNLM(nn.Module):
       loss = F.cross_entropy(logits, targets)
 
     return logits, loss
+  
