@@ -1,2 +1,2 @@
 # pg-rnn
-Tiny LM trained on Paul Grahams Essays
+just a smol rnn trained on pg's essays :)
