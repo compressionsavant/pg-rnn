@@ -10,7 +10,7 @@ class Cell(nn.Module):
     self.h2h = nn.Linear(hidden_size, hidden_size)
 
   def forward(self, x, hidden_state):
-    state = self.i2h(x) + self.h2h(x)
+    state = self.i2h(x) + self.h2h(hidden_state)
     return F.tanh(state)
   
 
@@ -25,7 +25,7 @@ class Layer(nn.Module):
   def forward(self, x, hidden_state=None):
     B, T, C = x.shape
     if hidden_state is None:
-      h = torch.zeros(B, self.hidden_size)
+      h = torch.zeros(B, self.hidden_size, device=x.device, dtype=x.dtype)
     else:
       h = hidden_state
     
@@ -50,7 +50,7 @@ class TLayer(nn.Module):
   def forward(self, x, hidden_state=None):
     B, T, C = x.shape
     if hidden_state is None:
-      h = torch.zeros(B, self.hidden_size)
+      h = torch.zeros(B, self.hidden_size, device=x.device, dtype=x.dtype)
     else:
       h = hidden_state
     

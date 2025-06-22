@@ -49,7 +49,7 @@ class RNNLM(nn.Module):
     if targets is None:
       loss = None
     else:
-      B, T, C = x.shape
+      B, T, C = logits.shape
       logits = logits.view(B*T, C)
       targets = targets.view(B*T)
       loss = F.cross_entropy(logits, targets)
