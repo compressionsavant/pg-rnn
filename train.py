@@ -77,6 +77,6 @@ for it in range(its):
   torch.cuda.synchronize()
 
   if it % eval_it == 0 or it == its - 1:
-    print(f"Iteration: {it} Val loss: {loss}")
+    print(f"Iteration: {it} loss: {loss.item()}")
 
 torch.save(m.state_dict(), "model.pth")
