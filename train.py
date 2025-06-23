@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 from torch.utils.data import IterableDataset
 from datasets import load_dataset
 from itertools import chain
@@ -80,3 +81,17 @@ for it in range(its):
     print(f"Iteration: {it} loss: {loss.item()}")
 
 torch.save(m.state_dict(), "model.pth")
+
+def generate(idx, ctx_window):
+  for token in range(ctx_window):
+    idxc = idx[:, -ctx:]
+    logits, _ = m(idxc)
+    logits = logits[:, -1, :]
+    p = F.softmax(logits, dim=-1)
+    idx_next = torch.multinomial(p, num_samples=1)
+    idx = torch.cat([idx, idx_next], dim=1)
+  return idx
+
+context = torch.zeros((1,1), dtype=torch.long, device=device)
+with open("pg.txt", "w") as f:
+  f.write(dataset.enc.decode(generate(context, ctx_window=1000)[0].tolist()))
