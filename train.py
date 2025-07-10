@@ -17,6 +17,11 @@ n_eval: int = 200
 device: str = "cuda" if torch.cuda.is_available() else "cpu"
 # ----------------------------------------------
 
+torch.set_float32_matmul_precision("high")
+torch.manual_seed(42)
+if device == "cuda":
+  torch.cuda.manual_seed(42)
+
 model = RNNLM(Config())
 model = torch.compile(model)
 m = model.to(device)
@@ -61,11 +66,6 @@ optim = torch.optim.AdamW(m.parameters(), lr=lr)
 
 dataset = PGStream(B=batch_size, T=ctx)
 dataloader = iter(dataset)
-
-torch.set_float32_matmul_precision("high")
-torch.manual_seed(42)
-if device == "cuda":
-  torch.cuda.manual_seed(42)
 
 for it in range(its):
   x, y = next(dataloader)
